@@ -20,9 +20,8 @@ The Python Development Internship is designed to provide hands-on experience in 
 - Documenting code and maintaining project records.
 
 ## Connect With Me
-📧 Email: [your-email@example.com]  
-🔗 LinkedIn: [your-profile-link]  
-🐙 GitHub: [your-github-profile]  
+📧 Email:nayivivek212@gmail.com
+🔗 LinkedIn:https://www.linkedin.com/in/vivek-nayi-98412a314/
 
 🔥 Stay tuned for updates as I progress in this exciting internship journey! 🚀
 
