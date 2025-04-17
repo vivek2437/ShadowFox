@@ -1,1 +1,56 @@
-w h5q4u8
+#1. Web Scraper: Extract data from websites using libraries like Beautiful Soup or Scrapy.
+from selenium import webdriver
+from bs4 import BeautifulSoup
+import time
+import csv
+
+# Step 1: Setup Selenium WebDriver
+options = webdriver.ChromeOptions()
+options.add_argument("--headless")  # Run Chrome in the background
+options.add_argument("--no-sandbox")
+options.add_argument("--disable-dev-shm-usage")
+
+driver = webdriver.Chrome(options=options)
+
+# Step 2: Load Amazon's laptop search results
+url = "https://www.amazon.in/s?k=laptops"
+driver.get(url)
+time.sleep(5)  # Let the JavaScript content load
+
+# Step 3: Parse the HTML with BeautifulSoup
+soup = BeautifulSoup(driver.page_source, 'html.parser')
+driver.quit()
+
+laptops = []
+
+# Step 4: Extract laptop title and price
+for product in soup.select(".s-result-item"):
+    title_tag = product.select_one("h2 span")
+    price_tag = product.select_one(".a-price-whole")
+
+    if title_tag and price_tag:
+        title = title_tag.get_text(strip=True)
+        price_text = price_tag.get_text(strip=True).replace(",", "")
+
+        try:
+            price = int(price_text)
+            laptops.append({
+                "Title": title,
+                "Price (INR)": price
+            })
+        except ValueError:
+            continue  # Skip if price is not a valid number
+
+# Step 5: Sort laptops by price (ascending)
+laptops.sort(key=lambda x: x["Price (INR)"])
+
+# Step 6: Save to CSV
+if laptops:
+    with open("amazon_laptops_sorted.csv", "w", newline='', encoding="utf-8") as file:
+        writer = csv.DictWriter(file, fieldnames=["Title", "Price (INR)"])
+        writer.writeheader()
+        writer.writerows(laptops)
+
+    print(f"✅ Extracted & sorted {len(laptops)} laptops by price. Saved to amazon_laptops_sorted.csv")
+else:
+    print("❌ No laptop data extracted. Try increasing delay or update selectors.")
